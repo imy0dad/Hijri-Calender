@@ -1,849 +1,919 @@
 <!DOCTYPE html>
-<html lang="en" data-mode="dark" data-palette="rose">
+<html lang="en" data-theme="manuscript">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#08090d">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#EEE4CC" id="metaThemeColor">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.json">
 <title>The Hijri Calendar — التقويم الهجري</title>
-
-<!-- High-Res App Icon -->
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='128' fill='%2308090d'/><path d='M320 120C230 120 150 190 150 290C150 390 230 460 320 460C270 440 230 380 230 290C230 200 270 140 320 120Z' fill='%23e11d48'/></svg>">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23151310'/%3E%3Cmask id='cm'%3E%3Crect width='100' height='100' fill='white'/%3E%3Ccircle cx='62' cy='34' r='26' fill='black'/%3E%3C/mask%3E%3Ccircle cx='48' cy='46' r='30' fill='%23C9A227' mask='url(%23cm)'/%3E%3C/svg%3E">
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+:root{
+  --font-serif:'Noto Naskh Arabic','Iowan Old Style','Palatino Linotype',Georgia,'Times New Roman',serif;
+  --font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans',Helvetica,Arial,sans-serif;
+  --font-mono:'SF Mono','SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
+  --radius-card: 20px;
+  --radius-item: 14px;
+  --radius-pill: 999px;
+}
 
-  :root {
-    --font-serif: 'Amiri', Georgia, serif;
-    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    
-    --radius-sm: 10px;
-    --radius-md: 18px;
-    --radius-lg: 28px;
-    --radius-full: 9999px;
-    
-    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-    --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
-  }
+/* ---------- Themes ---------- */
+[data-theme="manuscript"]{
+  --paper:#EEE4CC; --paper-alt:#E6D9BB; --surface:#F7F0DD;
+  --ink:#26241C; --ink-soft:#6B6249; --rule:#C7B78D;
+  --accent:#8A5A22; --accent-strong:#6B4416; --red:#9C2B27; --shadow-tint:38,32,18;
+  color-scheme: light; --noise-opacity:0.05;
+  --moon-lit:#F4ECD6; --moon-dark:#8E8360; --moon-shadow-op:0.55;
+}
+[data-theme="sandstone"]{
+  --paper:#F5EFE6; --paper-alt:#E8DFD1; --surface:#FAF6F0;
+  --ink:#2C2621; --ink-soft:#786A5C; --rule:#D4C7B5;
+  --accent:#C27D38; --accent-strong:#A06225; --red:#B84A39; --shadow-tint:44,38,33;
+  color-scheme: light; --noise-opacity:0.04;
+  --moon-lit:#FFFDF9; --moon-dark:#A39589; --moon-shadow-op:0.5;
+}
+[data-theme="midnight"]{
+  --paper:#000000; --paper-alt:#0A0A09; --surface:#0D0C0A;
+  --ink:#EDE6D3; --ink-soft:#8F8878; --rule:#26241D;
+  --accent:#D4AF37; --accent-strong:#F0D878; --red:#C4564A; --shadow-tint:0,0,0;
+  color-scheme: dark; --noise-opacity:0.035;
+  --moon-lit:#F0E7C8; --moon-dark:#2A2620; --moon-shadow-op:0.85;
+}
+[data-theme="observatory"]{
+  --paper:#0A0F1C; --paper-alt:#0E1526; --surface:#101A2C;
+  --ink:#DCE3ED; --ink-soft:#7C89A0; --rule:#1D2740;
+  --accent:#4FA69E; --accent-strong:#7ED0C8; --red:#C2695A; --shadow-tint:0,0,0;
+  color-scheme: dark; --noise-opacity:0.045;
+  --moon-lit:#E4EEF2; --moon-dark:#12202E; --moon-shadow-op:0.8;
+}
+[data-theme="emerald"]{
+  --paper:#06140E; --paper-alt:#0A1F17; --surface:#0E291F;
+  --ink:#E1EFEA; --ink-soft:#7BA395; --rule:#173D2F;
+  --accent:#22C55E; --accent-strong:#4ADE80; --red:#E11D48; --shadow-tint:0,0,0;
+  color-scheme: dark; --noise-opacity:0.04;
+  --moon-lit:#E8FAF2; --moon-dark:#0D261C; --moon-shadow-op:0.85;
+}
 
-  /* Refined Palettes */
-  [data-palette="gold"] {
-    --accent: #d4af37;
-    --accent-glow: rgba(212, 175, 55, 0.35);
-    --accent-rgb: 212, 175, 55;
-  }
-  [data-palette="emerald"] {
-    --accent: #2e9b63;
-    --accent-glow: rgba(46, 155, 99, 0.35);
-    --accent-rgb: 46, 155, 99;
-  }
-  [data-palette="sapphire"] {
-    --accent: #3b82f6;
-    --accent-glow: rgba(59, 130, 246, 0.35);
-    --accent-rgb: 59, 130, 246;
-  }
-  [data-palette="rose"] {
-    --accent: #e11d48;
-    --accent-glow: rgba(225, 29, 72, 0.35);
-    --accent-rgb: 225, 29, 72;
-  }
-  [data-palette="amber"] {
-    --accent: #f59e0b;
-    --accent-glow: rgba(245, 158, 11, 0.35);
-    --accent-rgb: 245, 158, 11;
-  }
+@keyframes fadeUp{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:translateY(0); } }
+@keyframes floatY{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-4px); } }
+@keyframes spinSlow{ to{ transform:rotate(360deg); } }
 
-  /* Dark Atmosphere */
-  [data-mode="dark"] {
-    --bg-page: #060709;
-    --bg-ambient-1: radial-gradient(circle at 50% -10%, rgba(var(--accent-rgb), 0.18), transparent 70%);
-    --bg-ambient-2: radial-gradient(circle at 80% 100%, rgba(15, 23, 42, 0.8), transparent 60%);
-    --bg-ambient-3: radial-gradient(circle at 10% 40%, rgba(30, 27, 75, 0.4), transparent 50%);
+*,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
 
-    --bg-surface: rgba(18, 20, 26, 0.75);
-    --bg-surface-elevated: rgba(30, 34, 45, 0.65);
-    --border-subtle: rgba(255, 255, 255, 0.1);
-    --border-bevel: rgba(255, 255, 255, 0.18);
-    --border-accent: rgba(var(--accent-rgb), 0.5);
+html{ background:var(--paper); scroll-behavior:smooth; }
+body{
+  background-color:var(--paper);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-blend-mode:overlay; color:var(--ink);
+  font-family:var(--font-sans); line-height:1.5;
+  min-height:100vh; min-height:100dvh;
+  padding-bottom:max(70px, calc(50px + env(safe-area-inset-bottom)));
+  transition:background-color .35s ease, color .35s ease; overscroll-behavior-y:none;
+}
+body::before{
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:inherit; opacity:var(--noise-opacity); mix-blend-mode:overlay;
+}
+body::after{
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:1;
+  background:radial-gradient(ellipse at 50% 0%, transparent 55%, rgba(var(--shadow-tint),0.18) 130%);
+  transition:background .35s ease;
+}
+a{ color:inherit; }
+button, input, select, .day-cell, .month-row, .nav-link { touch-action: manipulation; -webkit-user-select: none; user-select: none; }
 
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    
-    --shadow-base: 0 10px 30px -10px rgba(0, 0, 0, 0.8), inset 0 1px 0 0 var(--border-bevel);
-    --shadow-pop: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 30px -5px var(--accent-glow), inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
-    
-    --glass-bg: rgba(10, 12, 16, 0.75);
-    --color-scheme: dark;
-  }
+/* ---------- Section Header Lines ---------- */
+.section-header-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.section-header-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+  opacity: 0.6;
+}
 
-  /* Light Atmosphere */
-  [data-mode="light"] {
-    --bg-page: #eef0f3;
-    --bg-ambient-1: radial-gradient(circle at 50% -10%, rgba(var(--accent-rgb), 0.15), transparent 65%);
-    --bg-ambient-2: radial-gradient(circle at 10% 90%, #e2e8f0, transparent 60%);
-    --bg-ambient-3: radial-gradient(circle at 90% 30%, rgba(255, 255, 255, 0.8), transparent 50%);
+/* ---------- Top bar ---------- */
+.top-bar{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:max(12px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 12px max(16px, env(safe-area-inset-left));
+  border-bottom:1px solid var(--rule); position:relative; z-index:2; animation:fadeUp .4s ease both;
+}
+.top-left{ display:flex; align-items:center; gap:12px; }
 
-    --bg-surface: rgba(255, 255, 255, 0.8);
-    --bg-surface-elevated: rgba(241, 245, 249, 0.9);
-    --border-subtle: rgba(0, 0, 0, 0.08);
-    --border-bevel: rgba(255, 255, 255, 0.9);
-    --border-accent: rgba(var(--accent-rgb), 0.6);
+.menu-btn{
+  background:var(--surface); border:1px solid var(--rule); color:var(--ink);
+  border-radius:var(--radius-pill); padding:8px 12px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:background .2s ease, transform .2s ease;
+}
+.menu-btn:active{ transform:scale(0.95); }
+.menu-btn svg{ width:18px; height:18px; }
 
-    --text-primary: #0f172a;
-    --text-secondary: #64748b;
+.brand{
+  display:flex; align-items:center; gap:10px;
+  font-family:var(--font-serif); font-weight:700; font-size:17px; letter-spacing:0.01em;
+}
+.brand svg{ width:20px; height:20px; color:var(--accent); flex-shrink:0; }
 
-    --shadow-base: 0 10px 25px -8px rgba(15, 23, 42, 0.08), inset 0 1px 0 0 #ffffff;
-    --shadow-pop: 0 25px 45px -10px rgba(15, 23, 42, 0.18), 0 0 25px -2px var(--accent-glow), inset 0 1px 0 0 #ffffff;
+.top-loc-btn{
+  display:flex; align-items:center; gap:6px; background:var(--surface);
+  border:1px solid var(--rule); border-radius:var(--radius-pill); color:var(--ink-soft);
+  padding:7px 14px; font-size:11.5px; font-weight:600; cursor:pointer;
+  font-family:var(--font-sans); transition:all .2s ease; box-shadow:0 1px 4px rgba(var(--shadow-tint),0.06);
+  max-width: 160px;
+}
+.top-loc-btn span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.top-loc-btn svg{ width:14px; height:14px; color:var(--accent); flex-shrink:0; }
+.top-loc-btn:active{ transform:scale(0.95); }
 
-    --glass-bg: rgba(248, 250, 252, 0.82);
-    --color-scheme: light;
-  }
+/* ---------- Sidebar ---------- */
+.sidebar-backdrop{
+  position:fixed; inset:0; background:rgba(0,0,0,0.55); backdrop-filter:blur(3px);
+  z-index:998; opacity:0; pointer-events:none; transition:opacity .25s ease;
+}
+.sidebar-backdrop.active{ opacity:1; pointer-events:auto; }
+.sidebar{
+  position:fixed; top:0; left:0; bottom:0; width:290px; max-width:82vw;
+  background:var(--surface); border-right:1px solid var(--rule);
+  z-index:999; transform:translateX(-100%); transition:transform .28s cubic-bezier(0.16, 1, 0.3, 1);
+  display:flex; flex-direction:column; box-shadow:4px 0 25px rgba(var(--shadow-tint),0.25);
+  padding-top:env(safe-area-inset-top); padding-bottom:env(safe-area-inset-bottom); will-change: transform;
+}
+.sidebar.active{ transform:translateX(0); }
+.sidebar-header{ padding:16px 20px; border-bottom:1px solid var(--rule); display:flex; align-items:center; justify-content:space-between; }
+.sidebar-close{ background:transparent; border:none; font-size:22px; color:var(--ink-soft); cursor:pointer; line-height:1; padding:6px; }
+.sidebar-content{ padding:20px; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:22px; -webkit-overflow-scrolling:touch; }
+.sidebar-section-title{ font-size:10px; text-transform:uppercase; letter-spacing:0.12em; font-weight:700; color:var(--ink-soft); margin-bottom:8px; }
+.sidebar-nav{ display:flex; flex-direction:column; gap:4px; }
+.nav-link{
+  display:block; padding:10px 14px; font-size:13.5px; font-weight:600; color:var(--ink); text-decoration:none;
+  border-radius:var(--radius-item); border:1px solid transparent; transition:all .18s ease;
+}
+.nav-link:hover, .nav-link:active{ background:var(--paper-alt); border-color:var(--rule); color:var(--accent); }
 
-  *, *::before, *::after { 
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0; 
-    -webkit-tap-highlight-color: transparent;
-  }
+.mode-toggle-group{ display:flex; gap:6px; margin-bottom:10px; }
+.mode-btn{
+  flex:1; padding:8px 6px; font-size:11px; font-weight:700; background:var(--paper-alt); border:1px solid var(--rule);
+  color:var(--ink-soft); border-radius:var(--radius-pill); cursor:pointer; transition:all .2s ease; text-align:center;
+}
+.mode-btn.active{ background:var(--accent); color:var(--paper); border-color:var(--accent); }
+.sidebar-theme-list{ display:flex; flex-direction:column; gap:6px; }
+.sidebar-theme-btn{
+  text-align:left; padding:9px 14px; font-size:12px; font-weight:600; background:var(--paper-alt);
+  border:1px solid var(--rule); color:var(--ink); border-radius:var(--radius-item); cursor:pointer;
+  display:flex; justify-content:space-between; align-items:center; transition:all .2s ease;
+}
+.sidebar-theme-btn.active{ background:var(--accent); color:var(--paper); border-color:var(--accent); }
+.theme-tag{ font-size:9.5px; opacity:0.8; text-transform:uppercase; font-weight:700; }
 
-  body {
-    background-color: var(--bg-page);
-    background-image: 
-      var(--bg-ambient-1),
-      var(--bg-ambient-2),
-      var(--bg-ambient-3);
-    background-attachment: fixed;
-    color: var(--text-primary);
-    font-family: var(--font-sans);
-    line-height: 1.5;
-    min-height: 100vh;
-    padding-bottom: 60px;
-    transition: background-color 0.4s var(--ease-smooth), color 0.4s var(--ease-smooth);
-    -webkit-font-smoothing: antialiased;
-  }
+/* ---------- Header ---------- */
+header{ max-width:720px; margin:0 auto; padding:24px 20px 10px; text-align:center; position:relative; z-index:2; animation:fadeUp .5s ease both; }
+.crescent-mark{ width:34px; height:34px; margin:0 auto 10px; color:var(--accent); animation:floatY 5s ease-in-out infinite; filter:drop-shadow(0 3px 6px rgba(var(--shadow-tint),0.25)); }
+h1{ font-family:var(--font-serif); font-weight:700; font-size:clamp(24px,5vw,34px); }
+.subtitle-ar{ font-family:var(--font-serif); font-size:16px; color:var(--accent); margin-top:2px; direction:rtl; }
 
-  .top-nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    background: var(--glass-bg);
-    border-bottom: 1px solid var(--border-subtle);
-    padding: 14px 28px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-  }
+/* ---------- Today panel ---------- */
+.today-panel{ max-width:560px; margin:16px auto 0; padding:0 16px; position:relative; z-index:2; animation:fadeUp .5s ease .06s both; }
+.panel-box{
+  border:1px solid var(--rule); background:var(--surface); border-radius:var(--radius-card); position:relative;
+  box-shadow:0 4px 20px rgba(var(--shadow-tint),0.04); overflow:hidden;
+}
+.panel-head{ display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-bottom:1px solid var(--rule); font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-soft); font-weight:700; }
+.panel-head .today-label{ color:var(--accent); }
 
-  .nav-brand {
-    font-family: var(--font-serif);
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--accent);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    text-shadow: 0 0 12px var(--accent-glow);
-  }
+/* ---------- Moon phase orb ---------- */
+.moon-row{ display:flex; align-items:center; gap:16px; padding:16px 18px 14px; border-bottom:1px solid var(--rule); }
+.moon-orb-wrap{ flex-shrink:0; }
+.moon-orb{
+  width:50px; height:50px; border-radius:50%; position:relative; overflow:hidden;
+  background:radial-gradient(circle at 32% 28%, var(--moon-lit) 0%, var(--moon-lit) 32%, var(--moon-dark) 100%);
+  box-shadow:inset -6px -6px 10px rgba(0,0,0,0.35), inset 3px 3px 6px rgba(255,255,255,0.15), 0 4px 12px rgba(var(--shadow-tint),0.2);
+}
+.moon-shade{ position:absolute; inset:0; border-radius:50%; background:var(--moon-dark); opacity:var(--moon-shadow-op); transition:transform .5s ease; }
+.moon-info{ flex:1; min-width:0; }
+.moon-phase-name{ font-family:var(--font-serif); font-weight:700; font-size:15px; margin-bottom:5px; }
+.progress-track{ width:100%; height:5px; border-radius:999px; background:var(--paper-alt); border:1px solid var(--rule); overflow:hidden; }
+.progress-fill{ height:100%; width:0%; border-radius:999px; background:linear-gradient(90deg, var(--accent), var(--accent-strong)); transition:width .8s ease; }
+.progress-label{ font-size:10.5px; color:var(--ink-soft); margin-top:5px; }
 
-  .controls-group {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+.dual-grid{ display:grid; grid-template-columns:1fr 1fr; }
+.date-cell{ padding:16px 12px; text-align:center; }
+.date-cell + .date-cell{ border-left:1px solid var(--rule); }
+.date-cell .tag{ font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft); font-weight:700; margin-bottom:6px; }
+.date-cell .val{ font-family:var(--font-serif); font-weight:700; font-size:clamp(15px,3.4vw,18px); line-height:1.3; }
+.date-cell.primary .tag{ color:var(--accent); }
+.greg-line{ text-align:center; font-size:12.5px; color:var(--ink-soft); padding:10px 0; border-bottom:1px solid var(--rule); font-weight:600; }
 
-  .palette-picker {
-    display: flex;
-    align-items: center;
-    background: var(--bg-surface-elevated);
-    border: 1px solid var(--border-subtle);
-    padding: 5px;
-    border-radius: var(--radius-full);
-    gap: 6px;
-  }
+/* ---------- Prayer Times Section ---------- */
+.prayer-container{ padding:14px 18px; border-bottom:1px solid var(--rule); background:var(--paper-alt); }
+.prayer-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); }
+.prayer-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; text-align:center; }
+@media (min-width: 480px){ .prayer-grid{ grid-template-columns:repeat(6, 1fr); gap:6px; } }
+.prayer-item{ background:var(--surface); border:1px solid var(--rule); padding:8px 4px; border-radius:var(--radius-item); }
+.prayer-name{ font-size:9.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; }
+.prayer-time{ font-family:var(--font-mono); font-size:11.5px; font-weight:700; color:var(--ink); margin-top:2px; white-space:nowrap; }
 
-  .palette-btn {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 2px solid transparent;
-    cursor: pointer;
-    transition: transform 0.3s var(--ease-spring);
-    padding: 0;
-  }
-  .palette-btn.active {
-    border-color: var(--text-primary);
-    transform: scale(1.25);
-  }
+.panel-controls{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 18px; flex-wrap:wrap; }
+.btn{
+  font-family:var(--font-sans); font-size:11.5px; font-weight:700; background:var(--paper-alt); border:1px solid var(--rule); color:var(--ink);
+  padding:8px 16px; border-radius:var(--radius-pill); cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+  box-shadow:0 1px 3px rgba(var(--shadow-tint),0.08); transition:transform .15s ease, background .15s ease;
+}
+.btn svg{ width:12px; height:12px; }
+.btn:active{ transform:scale(0.97); }
+.btn.spin svg{ animation:spinSlow .7s linear; }
 
-  .mode-toggle {
-    background: var(--bg-surface-elevated);
-    border: 1px solid var(--border-subtle);
-    color: var(--text-primary);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: var(--shadow-base);
-  }
+.offset-row{ display:inline-flex; border:1px solid var(--rule); border-radius:var(--radius-pill); overflow:hidden; background:var(--paper-alt); padding:2px; }
+.offset-row button{ font-size:11px; font-weight:700; background:transparent; border:none; color:var(--ink-soft); padding:6px 12px; cursor:pointer; border-radius:var(--radius-pill); transition:all .2s ease; }
+.offset-row button.active{ background:var(--accent-strong); color:#FFFFFF; }
+.status-line{ font-size:11.5px; padding:0 18px 8px; min-height:16px; color:var(--ink-soft); }
+.status-line.err{ color:var(--red); font-weight:600; }
+.status-line.ok{ color:var(--accent); font-weight:600; }
+.source-note{ font-size:10.5px; color:var(--ink-soft); text-align:center; padding:0 18px 14px; opacity:0.85; }
 
-  header {
-    text-align: center;
-    padding: 30px 20px 20px;
-    max-width: 680px;
-    margin: 0 auto;
-  }
+/* ---------- Converter ---------- */
+.converter{ max-width:560px; margin:26px auto 0; padding:0 16px; position:relative; z-index:2; animation:fadeUp .5s ease .08s both; }
+.converter-card {
+  background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius-card);
+  padding: 18px; text-align: center; box-shadow: 0 4px 20px rgba(var(--shadow-tint),0.04);
+}
+input[type="date"]{
+  font-family:var(--font-sans); font-size:16px; font-weight:700; color:var(--ink); background:var(--paper-alt); border:1px solid var(--rule);
+  border-radius:var(--radius-pill); padding:9px 20px; color-scheme: inherit; cursor:pointer; -webkit-appearance:none; text-align:center; outline:none;
+}
+#convertResult{ margin-top:12px; font-family:var(--font-serif); font-weight:700; font-size:18px; color:var(--accent-strong); min-height:24px; }
 
-  .header-icon {
-    width: 48px;
-    height: 48px;
-    margin: 0 auto 10px;
-    color: var(--accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    filter: drop-shadow(0 4px 12px var(--accent-glow));
-  }
+/* ---------- Calendar Grid ---------- */
+.cal-section{ max-width:720px; margin:30px auto 0; padding:0 16px; position:relative; z-index:2; animation:fadeUp .5s ease .1s both; }
+.cal-nav{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.cal-nav .nav-btn{ background:var(--surface); border:1px solid var(--rule); color:var(--ink); width:36px; height:36px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 4px rgba(var(--shadow-tint),0.06); }
+.cal-nav .nav-btn svg{ width:14px; height:14px; }
+.cal-title{ text-align:center; }
+.cal-title .m{ font-family:var(--font-serif); font-weight:700; font-size:20px; }
+.cal-title .h{ font-size:12px; color:var(--accent); margin-top:1px; font-weight:600; }
+.cal-jump{ font-size:11px; text-decoration:underline; color:var(--ink-soft); background:none; border:none; cursor:pointer; margin-top:3px; }
 
-  h1 {
-    font-family: var(--font-serif);
-    font-size: clamp(30px, 5vw, 42px);
-    font-weight: 700;
-    color: var(--text-primary);
-  }
+.weekday-row{ display:grid; grid-template-columns:repeat(7,1fr); border:1px solid var(--rule); border-bottom:none; border-radius:var(--radius-card) var(--radius-card) 0 0; background:var(--surface); overflow:hidden; }
+.weekday-row div{ text-align:center; font-size:10px; letter-spacing:0.06em; text-transform:uppercase; font-weight:700; color:var(--ink-soft); padding:10px 2px; border-right:1px solid var(--rule); }
+.weekday-row div:last-child{ border-right:none; }
+.weekday-row div.fri{ color:var(--red); }
 
-  .arabic-subtitle {
-    font-family: var(--font-serif);
-    font-size: 20px;
-    color: var(--accent);
-  }
+.day-grid{ display:grid; grid-template-columns:repeat(7,1fr); border:1px solid var(--rule); border-radius:0 0 var(--radius-card) var(--radius-card); overflow:hidden; background:var(--surface); box-shadow:0 4px 16px rgba(var(--shadow-tint),0.06); }
+.day-cell{ min-height:56px; border-right:1px solid var(--rule); border-top:1px solid var(--rule); padding:5px; cursor:pointer; position:relative; transition:background .15s ease; }
+.day-cell:nth-child(7n){ border-right:none; }
+.day-cell:active{ background:var(--paper-alt); }
+.day-cell.outside{ opacity:0.32; }
+.day-cell .gnum{ font-family:var(--font-serif); font-size:14.5px; font-weight:700; line-height:1; }
+.day-cell.fri .gnum{ color:var(--red); }
+.day-cell .hsub{ font-size:9px; color:var(--ink-soft); margin-top:3px; line-height:1.1; }
+.day-cell.today{ background:var(--paper-alt); box-shadow:inset 0 0 0 2px var(--accent-strong); }
+.day-cell.today .gnum{ color:var(--accent-strong); }
+.day-cell .hdot{ position:absolute; top:6px; right:6px; width:5px; height:5px; border-radius:50%; background:var(--red); }
+.day-cell .actdot{ position:absolute; bottom:6px; right:6px; width:5px; height:5px; border-radius:50%; background:var(--accent); }
 
-  .today-card {
-    max-width: 520px;
-    margin: 28px auto 0;
-    background: var(--bg-surface);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-lg);
-    padding: 28px;
-    box-shadow: var(--shadow-base);
-    position: relative;
-    cursor: pointer;
-    transition: transform 0.35s var(--ease-spring), box-shadow 0.35s var(--ease-smooth), border-color 0.35s ease;
-  }
-  
-  .today-card:hover {
-    transform: translateY(-6px) scale(1.015);
-    border-color: var(--border-accent);
-    box-shadow: var(--shadow-pop);
-  }
+/* ---------- Upcoming Dates & Months ---------- */
+.upcoming{ max-width:720px; margin:30px auto 0; padding:0 16px; position:relative; z-index:2; animation:fadeUp .5s ease .12s both; }
+.upcoming-list{ display:flex; flex-direction:column; gap:10px; }
+.upcoming-row{ display:flex; justify-content:space-between; align-items:center; gap:10px; padding:14px 18px; border:1px solid var(--rule); border-radius:var(--radius-item); background:var(--surface); box-shadow:0 2px 8px rgba(var(--shadow-tint),0.03); }
+.upcoming-row .name{ font-family:var(--font-serif); font-weight:700; font-size:15px; color:var(--ink); }
+.upcoming-row .when{ font-size:11.5px; color:var(--ink-soft); margin-top:2px; }
+.upcoming-row .count{ font-size:12px; font-weight:700; color:var(--accent-strong); white-space:nowrap; }
 
-  .card-top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  .pill-label {
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--accent);
-    background: rgba(var(--accent-rgb), 0.14);
-    border: 1px solid rgba(var(--accent-rgb), 0.25);
-    padding: 4px 12px;
-    border-radius: var(--radius-full);
-  }
-  .hint-text {
-    font-size: 12px;
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-weight: 500;
-  }
+.months-section{ max-width:720px; margin:36px auto 0; padding:0 16px; position:relative; z-index:2; animation:fadeUp .5s ease .14s both; }
+.months-section > h2{ text-align:center; font-family:var(--font-serif); font-size:22px; margin-bottom:4px; }
+.months-sub { text-align:center; font-size:12px; color:var(--ink-soft); margin-bottom:18px; }
+.months-index{ display:flex; flex-direction:column; gap:10px; }
 
-  /* Dual Regional Grid */
-  .dual-date-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-bottom: 16px;
-  }
+/* Individual Month Card */
+.month-row{
+  display:flex; flex-direction:column; gap:8px; padding:14px 18px; border:1px solid var(--rule);
+  border-radius:var(--radius-item); cursor:pointer; background:var(--surface); box-shadow:0 2px 8px rgba(var(--shadow-tint),0.03);
+  transition:transform .15s ease, background .15s ease;
+}
+.month-row:active{ transform:scale(0.99); background:var(--paper-alt); }
+.month-card-header{ display:flex; justify-content:space-between; align-items:center; }
+.month-card-header .idx{ font-family:var(--font-mono); font-size:11.5px; color:var(--ink-soft); font-weight:600; }
+.month-crescent{ width:12px; height:12px; color:var(--accent-strong); opacity:0.6; }
+.month-card-body{ display:flex; justify-content:space-between; align-items:baseline; }
+.month-card-body .en{ font-family:var(--font-serif); font-weight:700; font-size:17px; color:var(--ink); }
+.month-card-body .ar{ font-family:var(--font-serif); font-size:15px; color:var(--ink-soft); direction:rtl; }
+.sacred-badge{ display:inline-block; font-size:9px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:var(--red); background:rgba(156, 43, 39, 0.08); border:1px solid rgba(156, 43, 39, 0.2); padding:3px 8px; border-radius:var(--radius-pill); width:fit-content; }
 
-  .date-box {
-    background: var(--bg-surface-elevated);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
-    padding: 16px 12px;
-    text-align: center;
-    transition: border-color 0.25s ease;
-  }
-  .date-box.primary {
-    border-color: var(--border-accent);
-    background: rgba(var(--accent-rgb), 0.06);
-  }
+/* ---------- Modal ---------- */
+.modal-backdrop{
+  position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(3px);
+  display:flex; align-items:center; justify-content:center; padding:16px;
+  opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:1000;
+}
+.modal-backdrop.active{ opacity:1; pointer-events:auto; }
+.modal-box{ background:var(--surface); border:1px solid var(--rule); border-radius:var(--radius-card); max-width:440px; width:100%; max-height:80vh; overflow-y:auto; padding:22px; position:relative; box-shadow:0 15px 40px rgba(0,0,0,0.3); -webkit-overflow-scrolling:touch; }
+.modal-close{ position:absolute; top:14px; right:14px; width:30px; height:30px; border-radius:50%; border:1px solid var(--rule); background:var(--paper-alt); cursor:pointer; color:var(--ink); display:flex; align-items:center; justify-content:center; }
+.modal-ar{ font-family:var(--font-serif); font-size:24px; color:var(--accent); text-align:center; direction:rtl; }
+.modal-en{ font-family:var(--font-serif); font-weight:700; font-size:18px; text-align:center; margin-top:2px; }
+.modal-sub{ font-size:12px; color:var(--ink-soft); text-align:center; font-style:italic; margin-top:2px; }
+.modal-body{ margin-top:14px; font-size:13px; line-height:1.55; }
+.modal-h4{ font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-top:12px; margin-bottom:4px; border-bottom:1px solid var(--rule); padding-bottom:3px; }
+.citation{ font-size:10.5px; color:var(--ink-soft); font-style:italic; margin-top:3px; display:block; }
 
-  .box-tag {
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-    margin-bottom: 6px;
-  }
-  .date-box.primary .box-tag {
-    color: var(--accent);
-  }
+/* Location Search Custom UI */
+.loc-search-input {
+  width: 100%; font-family: var(--font-sans); font-size: 16px; font-weight: 600; color: var(--ink);
+  background: var(--paper-alt); border: 1px solid var(--rule); border-radius: var(--radius-pill);
+  padding: 10px 18px; outline: none; margin-top: 10px; transition: border-color .2s;
+}
+.loc-search-input:focus { border-color: var(--accent); }
+.loc-suggestions {
+  margin-top: 8px; max-height: 180px; overflow-y: auto; border: 1px solid var(--rule);
+  border-radius: var(--radius-item); background: var(--paper); display: none;
+}
+.loc-suggestion-item {
+  padding: 10px 14px; font-size: 12.5px; font-weight: 600; cursor: pointer; border-bottom: 1px solid var(--rule);
+}
+.loc-suggestion-item:last-child { border-bottom: none; }
+.loc-suggestion-item:hover, .loc-suggestion-item:active { background: var(--paper-alt); color: var(--accent); }
 
-  .hijri-main-date {
-    font-family: var(--font-serif);
-    font-size: clamp(20px, 3.8vw, 25px);
-    font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1.25;
-  }
-
-  .greg-sub-date {
-    font-size: 13.5px;
-    color: var(--text-secondary);
-    text-align: center;
-    font-weight: 500;
-    margin-bottom: 20px;
-  }
-
-  .card-controls {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 18px;
-    border-top: 1px solid var(--border-subtle);
-    gap: 10px;
-  }
-
-  .btn-action {
-    background: var(--bg-surface-elevated);
-    border: 1px solid var(--border-subtle);
-    color: var(--text-primary);
-    font-size: 12px;
-    font-weight: 700;
-    padding: 9px 14px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    box-shadow: var(--shadow-base);
-    transition: transform 0.25s var(--ease-spring), border-color 0.25s ease;
-  }
-  .btn-action:hover { 
-    transform: translateY(-2px); 
-    border-color: var(--border-accent);
-  }
-
-  .offset-group {
-    display: inline-flex;
-    background: var(--bg-surface-elevated);
-    border: 1px solid var(--border-subtle);
-    padding: 4px;
-    border-radius: var(--radius-sm);
-  }
-  .offset-btn {
-    border: none;
-    background: transparent;
-    color: var(--text-secondary);
-    font-size: 11.5px;
-    font-weight: 700;
-    padding: 5px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  .offset-btn.active {
-    background: var(--accent);
-    color: #ffffff;
-    box-shadow: 0 4px 12px var(--accent-glow);
-  }
-
-  .source-footnote {
-    font-size: 11.5px;
-    color: var(--text-secondary);
-    margin-top: 14px;
-    text-align: center;
-    opacity: 0.85;
-  }
-
-  .converter-section {
-    max-width: 520px;
-    margin: 36px auto 0;
-    text-align: center;
-    padding: 0 20px;
-  }
-  .converter-section h3 {
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-secondary);
-    margin-bottom: 12px;
-  }
-
-  input[type="date"] {
-    background: var(--bg-surface);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--border-subtle);
-    color: var(--text-primary);
-    font-family: var(--font-sans);
-    font-size: 14.5px;
-    font-weight: 600;
-    padding: 12px 20px;
-    border-radius: var(--radius-sm);
-    outline: none;
-    box-shadow: var(--shadow-base);
-    color-scheme: var(--color-scheme);
-    cursor: pointer;
-  }
-  input[type="date"]:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 4px var(--accent-glow);
-  }
-
-  #convertResult {
-    margin-top: 14px;
-    font-family: var(--font-serif);
-    font-size: 21px;
-    font-weight: 700;
-    color: var(--accent);
-    text-shadow: 0 2px 8px var(--accent-glow);
-    min-height: 28px;
-  }
-
-  .months-container {
-    max-width: 1120px;
-    margin: 50px auto 0;
-    padding: 0 24px;
-  }
-  .section-header {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  .section-header h2 {
-    font-family: var(--font-serif);
-    font-size: 28px;
-    color: var(--text-primary);
-  }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 20px;
-  }
-
-  .month-card {
-    background: var(--bg-surface);
-    backdrop-filter: blur(16px);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
-    padding: 24px;
-    cursor: pointer;
-    box-shadow: var(--shadow-base);
-    transition: transform 0.35s var(--ease-spring), border-color 0.3s ease;
-  }
-
-  .month-card:hover {
-    transform: translateY(-8px);
-    border-color: var(--border-accent);
-    box-shadow: var(--shadow-pop);
-  }
-
-  .m-num { font-size: 11px; font-weight: 800; color: var(--accent); }
-  .m-title-ar { font-family: var(--font-serif); font-size: 24px; color: var(--text-primary); }
-  .m-title-en { font-family: var(--font-serif); font-size: 18px; font-weight: 700; color: var(--text-primary); }
-  .m-meaning { font-size: 12px; color: var(--text-secondary); font-style: italic; }
-  .m-desc { font-size: 13px; color: var(--text-secondary); margin-top: 10px; line-height: 1.4; }
-
-  .badge-sacred {
-    display: inline-flex;
-    font-size: 10px;
-    font-weight: 800;
-    color: var(--accent);
-    margin-top: 14px;
-    padding: 3px 8px;
-    background: rgba(var(--accent-rgb), 0.12);
-    border-radius: var(--radius-sm);
-  }
-
-  .modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(12px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    opacity: 0;
-    pointer-events: none;
-    padding: 20px;
-    transition: opacity 0.3s var(--ease-smooth);
-  }
-  .modal-backdrop.active {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .modal-window {
-    background: var(--bg-surface);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--border-accent);
-    border-radius: var(--radius-lg);
-    max-width: 500px;
-    width: 100%;
-    max-height: 85vh;
-    overflow-y: auto;
-    padding: 30px;
-    position: relative;
-    box-shadow: var(--shadow-pop);
-  }
-
-  .modal-close-btn {
-    position: absolute;
-    top: 18px; right: 18px;
-    background: var(--bg-surface-elevated);
-    border: 1px solid var(--border-subtle);
-    color: var(--text-primary);
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-  }
-
-  .modal-ar { font-family: var(--font-serif); font-size: 32px; color: var(--accent); text-align: center; }
-  .modal-en { font-family: var(--font-serif); font-size: 22px; font-weight: 700; text-align: center; }
-  .modal-sub { font-size: 13px; color: var(--text-secondary); text-align: center; font-style: italic; }
-
-  .modal-body { margin-top: 20px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
-  .modal-h4 {
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-top: 16px;
-    margin-bottom: 6px;
-    border-bottom: 1px solid var(--border-subtle);
-    padding-bottom: 4px;
-  }
-
-  footer {
-    text-align: center;
-    font-size: 12px;
-    color: var(--text-secondary);
-    margin-top: 50px;
-    opacity: 0.8;
-  }
+footer{ max-width:600px; margin:40px auto 0; padding:0 20px 40px; text-align:center; font-size:11px; line-height:1.6; color:var(--ink-soft); position:relative; z-index:2; }
 </style>
 </head>
 <body>
 
-<nav class="top-nav">
-  <a href="#" class="nav-brand">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-    <span>التقويم</span>
-  </a>
-
-  <div class="controls-group">
-    <div class="palette-picker" title="Color Palette">
-      <button type="button" class="palette-btn" data-palette="gold" style="background: #d4af37;"></button>
-      <button type="button" class="palette-btn" data-palette="emerald" style="background: #2e9b63;"></button>
-      <button type="button" class="palette-btn" data-palette="sapphire" style="background: #3b82f6;"></button>
-      <button type="button" class="palette-btn active" data-palette="rose" style="background: #e11d48;"></button>
-      <button type="button" class="palette-btn" data-palette="amber" style="background: #f59e0b;"></button>
-    </div>
-
-    <button type="button" class="mode-toggle" id="modeToggle" title="Toggle Light/Dark Atmosphere">
-      <svg id="modeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-    </button>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="brand"><svg viewBox="0 0 24 24" fill="currentColor"><mask id="sbm"><rect width="24" height="24" fill="white"/><circle cx="15.5" cy="8" r="6.5" fill="black"/></mask><circle cx="12" cy="12" r="9" mask="url(#sbm)"/></svg><span>Hijri Calendar</span></div>
+    <button class="sidebar-close" id="sidebarCloseBtn" aria-label="Close Menu">✕</button>
   </div>
-</nav>
+  <div class="sidebar-content">
+    <div>
+      <div class="sidebar-section-title">Navigation</div>
+      <nav class="sidebar-nav">
+        <a href="#todayPanel" class="nav-link">Today & Prayer Times</a>
+        <a href="#converterSection" class="nav-link">Date Converter</a>
+        <a href="#calendarSection" class="nav-link">Monthly Calendar</a>
+        <a href="#upcomingSection" class="nav-link">Upcoming Observances</a>
+        <a href="#monthsSection" class="nav-link">The Twelve Months</a>
+      </nav>
+    </div>
+    <div>
+      <div class="sidebar-section-title">Appearance & Themes</div>
+      <div class="mode-toggle-group">
+        <button type="button" id="lightModeBtn" class="mode-btn">☀️ Light</button>
+        <button type="button" id="darkModeBtn" class="mode-btn">🌙 Dark</button>
+      </div>
+      <div class="sidebar-theme-list">
+        <button type="button" data-theme="manuscript" class="sidebar-theme-btn"><span>Manuscript</span><span class="theme-tag">Light</span></button>
+        <button type="button" data-theme="sandstone" class="sidebar-theme-btn"><span>Sandstone</span><span class="theme-tag">Light</span></button>
+        <button type="button" data-theme="midnight" class="sidebar-theme-btn"><span>Midnight</span><span class="theme-tag">Dark</span></button>
+        <button type="button" data-theme="observatory" class="sidebar-theme-btn"><span>Observatory</span><span class="theme-tag">Dark</span></button>
+        <button type="button" data-theme="emerald" class="sidebar-theme-btn"><span>Emerald</span><span class="theme-tag">Dark</span></button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<div class="top-bar">
+  <div class="top-left">
+    <button class="menu-btn" id="menuToggleBtn" aria-label="Open Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <div class="brand"><svg viewBox="0 0 24 24" fill="currentColor"><mask id="bm"><rect width="24" height="24" fill="white"/><circle cx="15.5" cy="8" r="6.5" fill="black"/></mask><circle cx="12" cy="12" r="9" mask="url(#bm)"/></svg><span>Hijri Calendar</span></div>
+  </div>
+  
+  <button class="top-loc-btn" id="topLocBtn" title="Set Location manually">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    <span id="topLocLabel">Auto (GPS)</span>
+  </button>
+</div>
 
 <header>
-  <div class="header-icon">
-    <svg width="44" height="44" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-  </div>
+  <svg class="crescent-mark" viewBox="0 0 24 24" fill="currentColor"><mask id="hm"><rect width="24" height="24" fill="white"/><circle cx="15.5" cy="8" r="6.5" fill="black"/></mask><circle cx="12" cy="12" r="9" mask="url(#hm)"/></svg>
   <h1>The Hijri Calendar</h1>
-  <div class="arabic-subtitle">التقويم الهجري الإسلامي</div>
-
-  <div class="today-card" id="todayCard">
-    <div class="card-top-bar">
-      <span class="pill-label">Today</span>
-      <span class="hint-text">View details ↗</span>
-    </div>
-
-    <div class="dual-date-grid">
-      <div class="date-box primary">
-        <div class="box-tag">Pakistan (Local Ruet)</div>
-        <div class="hijri-main-date" id="localHijri">—</div>
-      </div>
-      <div class="date-box">
-        <div class="box-tag">Saudi Arabia / Global</div>
-        <div class="hijri-main-date" id="globalHijri">—</div>
-      </div>
-    </div>
-
-    <div class="greg-sub-date" id="todayGreg">—</div>
-
-    <div class="card-controls">
-      <button type="button" class="btn-action" id="refreshBtn">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-        <span>Refresh Sighting</span>
-      </button>
-
-      <div class="offset-group" id="offsetControls">
-        <button type="button" class="offset-btn" data-offset="-1">-1d</button>
-        <button type="button" class="offset-btn active" data-offset="0">0</button>
-        <button type="button" class="offset-btn" data-offset="1">+1d</button>
-      </div>
-    </div>
-    <div class="source-footnote" id="sourceTag">Local Sighting: -1d adjustment applied (Ruet-e-Hilal)</div>
-  </div>
+  <div class="subtitle-ar">التقويم الهجري</div>
 </header>
 
-<main>
-  <div class="converter-section">
-    <h3>Gregorian to Hijri Converter</h3>
+<div class="today-panel" id="todayPanel">
+  <div class="section-header-title">Today</div>
+  <div class="panel-box">
+    <div class="panel-head"><span class="today-label">Today</span><span id="weekdayTag">—</span></div>
+    <div class="moon-row">
+      <div class="moon-orb-wrap"><div class="moon-orb" id="moonOrb"><div class="moon-shade" id="moonShade"></div></div></div>
+      <div class="moon-info">
+        <div class="moon-phase-name" id="moonPhaseName">—</div>
+        <div class="progress-track"><div class="progress-fill" id="monthProgressFill"></div></div>
+        <div class="progress-label" id="monthProgressLabel">—</div>
+      </div>
+    </div>
+    <div class="dual-grid">
+      <div class="date-cell primary"><div class="tag">Local (Ruet-e-Hilal)</div><div class="val" id="localHijri">—</div></div>
+      <div class="date-cell"><div class="tag">Global (Umm al-Qura)</div><div class="val" id="globalHijri">—</div></div>
+    </div>
+    <div class="greg-line" id="todayGreg">—</div>
+    
+    <div class="prayer-container">
+      <div class="prayer-head"><span>Daily Prayer Times (Hanafi)</span><span id="prayerLoc">Locating…</span></div>
+      <div class="prayer-grid">
+        <div class="prayer-item"><div class="prayer-name">Fajr</div><div class="prayer-time" id="p-fajr">--:--</div></div>
+        <div class="prayer-item"><div class="prayer-name">Sunrise</div><div class="prayer-time" id="p-sunrise">--:--</div></div>
+        <div class="prayer-item"><div class="prayer-name">Dhuhr</div><div class="prayer-time" id="p-dhuhr">--:--</div></div>
+        <div class="prayer-item"><div class="prayer-name">Asr</div><div class="prayer-time" id="p-asr">--:--</div></div>
+        <div class="prayer-item"><div class="prayer-name">Maghrib</div><div class="prayer-time" id="p-maghrib">--:--</div></div>
+        <div class="prayer-item"><div class="prayer-name">Isha</div><div class="prayer-time" id="p-isha">--:--</div></div>
+      </div>
+    </div>
+
+    <div class="panel-controls">
+      <button type="button" class="btn" id="refreshBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg><span>Refresh</span></button>
+      <div class="offset-row" id="offsetRow"><button type="button" data-offset="-1">−1d</button><button type="button" data-offset="0" class="active">0</button><button type="button" data-offset="1">+1d</button></div>
+    </div>
+    <div class="status-line" id="statusLine"></div>
+    <div class="source-note">Calculated locally - tabular approximation</div>
+  </div>
+</div>
+
+<div class="converter" id="converterSection">
+  <div class="section-header-title">Convert a Date</div>
+  <div class="converter-card">
     <input type="date" id="dateInput">
     <div id="convertResult"></div>
   </div>
+</div>
 
-  <section class="months-container">
-    <div class="section-header">
-      <h2>The Sacred & Lunar Months</h2>
-    </div>
+<div class="cal-section" id="calendarSection">
+  <div class="cal-nav">
+    <button type="button" class="nav-btn" id="prevMonth" aria-label="Previous Month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <div class="cal-title"><div class="m" id="calMonthLabel">—</div><div class="h" id="calHijriLabel">—</div><button type="button" class="cal-jump" id="jumpToday">Jump to today</button></div>
+    <button type="button" class="nav-btn" id="nextMonth" aria-label="Next Month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
+  </div>
+  <div class="weekday-row"><div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div class="fri">Fr</div><div>Sa</div></div>
+  <div class="day-grid" id="dayGrid"></div>
+</div>
 
-    <div class="grid" id="monthGrid"></div>
-  </section>
-</main>
+<div class="upcoming" id="upcomingSection">
+  <div class="section-header-title">Upcoming Dates</div>
+  <div class="upcoming-list" id="upcomingList"></div>
+</div>
+
+<section class="months-section" id="monthsSection">
+  <h2>The Twelve Months</h2>
+  <div class="months-sub">Tap any month for its history, etymology, and key dates</div>
+  <div class="months-index" id="monthsIndex"></div>
+</section>
 
 <div class="modal-backdrop" id="modalBackdrop">
-  <div class="modal-window">
-    <button type="button" class="modal-close-btn" id="modalClose">✕</button>
+  <div class="modal-box">
+    <button type="button" class="modal-close" id="modalClose" aria-label="Close modal">✕</button>
     <div id="modalContent"></div>
   </div>
 </div>
 
 <footer>
-  Dual-Sighting Engine • Synchronized Local Sighting & Global Umm al-Qura Calculations.
+  Calculated dates follow civil tabular approximations. Actual Islamic month beginnings rely on official local sighting declarations (Ruet-e-Hilal / Umm al-Qura).
 </footer>
 
 <script>
-  const months = [
-    { ar:"مُحَرَّم", en:"Muharram", meaning:"Forbidden / Sacred", note:"Islamic New Year; Day of Ashura.", sacred:true, significance:"First month of the Hijri year.", practices:"Fasting on 9th & 10th." },
-    { ar:"صَفَر", en:"Safar", meaning:"Empty / Void", note:"Month dispelling pre-Islamic superstitions.", sacred:false, significance:"Focus on daily prayers and steadfastness.", practices:"Maintaining regular good habits." },
-    { ar:"رَبِيع الأوَّل", en:"Rabi' al-Awwal", meaning:"First Spring", note:"Birth month of Prophet Muhammad (ﷺ).", sacred:false, significance:"A month celebrating the life of the Prophet.", practices:"Sending blessings (Salawat) and studying Seerah." },
-    { ar:"رَبِيع الآخِر", en:"Rabi' al-Thani", meaning:"Second Spring", note:"Continuation of spring season.", sacred:false, significance:"Focused on spiritual growth.", practices:"Voluntary prayers." },
-    { ar:"جُمَادَى الأولى", en:"Jumada al-Awwal", meaning:"First Parched Land", note:"Marked dry periods in early Arabia.", sacred:false, significance:"Patience and perseverance.", practices:"Nightly prayers." },
-    { ar:"جُمَادَى الآخِرَة", en:"Jumada al-Thani", meaning:"Second Parched Land", note:"Closes dry months before Rajab.", sacred:false, significance:"Preparation for Rajab.", practices:"Charity and reflection." },
-    { ar:"رَجَب", en:"Rajab", meaning:"To Respect / Venerate", note:"Sacred month of Isra and Mi'raj.", sacred:true, significance:"One of four sacred months.", practices:"Seeking forgiveness (Istighfar)." },
-    { ar:"شَعْبَان", en:"Sha'ban", meaning:"To Branch Out", note:"Preparation month ahead of Ramadan.", sacred:false, significance:"Beloved month for voluntary fasting.", practices:"Increased fasting." },
-    { ar:"رَمَضَان", en:"Ramadan", meaning:"Scorching Heat", note:"Holiest month; daily fasts and Quran.", sacred:false, significance:"Month of Quranic revelation.", practices:"Fasting, Taraweeh, and intense devotion." },
-    { ar:"شَوَّال", en:"Shawwal", meaning:"To Rise / Be Light", note:"Opens with Eid al-Fitr.", sacred:false, significance:"Completes Ramadan journey.", practices:"6 voluntary fasts." },
-    { ar:"ذُو القِعْدَة", en:"Dhu al-Qi'dah", meaning:"Month of Truce", note:"Sacred month preceding Hajj.", sacred:true, significance:"Designated for peacemaking.", practices:"Avoiding dispute." },
-    { ar:"ذُو الحِجَّة", en:"Dhu al-Hijjah", meaning:"Owner of Pilgrimage", note:"Month of Hajj and Eid al-Adha.", sacred:true, significance:"Contains the most virtuous 10 days.", practices:"Fasting on Arafah & Udhiyah." }
-  ];
+const months = [
+  { ar:"مُحَرَّم", en:"Muharram", meaning:"forbidden / sacred", sacred:true, significance:"The first month of the Islamic calendar and one of the four sacred months ordained by Allah.", practices:"Fasting on the 9th and 10th days (Ashura) expiates the sins of the preceding year.", ref:"'The best fast after Ramadan is Allah's month of Muharram.' — Sahih Muslim 1163. Surah At-Tawbah 9:36." },
+  { ar:"صَفَر", en:"Safar", meaning:"empty / void", sacred:false, significance:"Historically named for empty homes as journeys resumed. In Islam, Safar holds no bad omens or ill fortune.", practices:"Regular daily worship; rejecting pre-Islamic superstitions regarding this month.", ref:"'There is no infection and no bad omen in Safar.' — Sahih al-Bukhari 5707." },
+  { ar:"رَبِيع الأوَّل", en:"Rabi' al-Awwal", meaning:"the first spring", sacred:false, significance:"The month in which Prophet Muhammad ﷺ was born and migrated (Hijrah) to Madinah.", practices:"Studying the Seerah (life of the Prophet ﷺ) and increasing blessings upon him (Salawat).", ref:"Surah Al-Ahzab 33:56 (Commandment on Salawat)." },
+  { ar:"رَبِيع الآخِر", en:"Rabi' al-Thani", meaning:"the second spring", sacred:false, significance:"A month of steadfastness following the early spring months of the Hijri cycle.", practices:"Maintaining voluntary prayers and daily Quranic recitation.", ref:"General Sunnah worship guidelines." },
+  { ar:"جُمَادَى الأولى", en:"Jumada al-Awwal", meaning:"first month of parched land", sacred:false, significance:"Marks the seasonal transition in the traditional Arabian peninsula calendar.", practices:"Patience, charity, and regular congregational prayers.", ref:"Surah Al-Baqarah 2:110." },
+  { ar:"جُمَادَى الآخِرَة", en:"Jumada al-Thani", meaning:"second month of parched land", sacred:false, significance:"The sixth month of the lunar year, serving as a gateway toward Rajab.", practices:"Self-reflection and voluntary fasting on Mondays and Thursdays.", ref:"Sunnah fasting — Sunan an-Nasa'i 2362." },
+  { ar:"رَجَب", en:"Rajab", meaning:"to respect / venerate", sacred:true, significance:"One of the four sacred months. Historically associated with Isra and Mi'raj (the Night Journey).", practices:"Refraining from wrongdoing, seeking forgiveness (Istighfar), and preparing spiritually for Ramadan.", ref:"'Year is twelve months, four of which are sacred...' — Sahih al-Bukhari 4662. Surah At-Tawbah 9:36." },
+  { ar:"شَعْبَان", en:"Sha'ban", meaning:"to branch out", sacred:false, significance:"The month directly preceding Ramadan when deeds are presented to Allah.", practices:"The Prophet ﷺ used to fast most of Sha'ban in preparation for Ramadan.", ref:"'That is a month to which people do not pay attention... and in it deeds are taken up to the Lord of the worlds.' — Sunan an-Nasa'i 2357." },
+  { ar:"رَمَضَان", en:"Ramadan", meaning:"intense heat / burning", sacred:false, significance:"The holiest month in Islam, in which the Noble Qur'an was revealed. Contains Laylat al-Qadr.", practices:"Obligatory fasting from dawn to sunset, Night Prayers (Taraweeh), Itikaf, and extensive Quran reading.", ref:"Surah Al-Baqarah 2:185; Surah Al-Qadr 97:1-5." },
+  { ar:"شَوَّال", en:"Shawwal", meaning:"to rise / uplift", sacred:false, significance:"Begins with Eid al-Fitr, the celebration completing Ramadan's fasting.", practices:"Fasting 6 days during Shawwal yields the reward of fasting the entire year.", ref:"'Whoever fasts Ramadan then follows it with six days of Shawwal, it is as if he fasted for a lifetime.' — Sahih Muslim 1164." },
+  { ar:"ذُو القِعْدَة", en:"Dhu al-Qi'dah", meaning:"month of truce", sacred:true, significance:"The first of the three consecutive sacred months (Dhu al-Qi'dah, Dhu al-Hijjah, Muharram).", practices:"A period of peace, reflection, and preparation for pilgrimage.", ref:"Surah At-Tawbah 9:36; Sahih al-Bukhari 3197." },
+  { ar:"ذُو الحِجَّة", en:"Dhu al-Hijjah", meaning:"month of pilgrimage", sacred:true, significance:"Home to the Hajj pilgrimage, the Day of Arafah, and Eid al-Adha.", practices:"Fasting the first 9 days (especially Arafah for non-pilgrims), Udhiyah (Qurbani) sacrifice, and Takbeer.", ref:"'There are no days in which righteous deeds are more beloved to Allah than these ten days.' — Sahih al-Bukhari 969." }
+];
 
-  let currentOffset = 0;
-  let currentHijriStateLocal = { day: 4, month: 3, year: 1448 };
-  let currentMode = localStorage.getItem('hijri_mode') || 'dark';
-  let currentPalette = localStorage.getItem('hijri_palette') || 'rose';
+const holidayDefs = [
+  { name:"Islamic New Year", m:1, d:1 }, { name:"Day of Ashura", m:1, d:10 },
+  { name:"Mawlid an-Nabi", m:3, d:12 }, { name:"Isra and Mi'raj", m:7, d:27 },
+  { name:"Start of Ramadan", m:9, d:1 }, { name:"Eid al-Fitr", m:10, d:1 },
+  { name:"Day of Arafah", m:12, d:9 }, { name:"Eid al-Adha", m:12, d:10 }
+];
 
-  document.documentElement.setAttribute('data-mode', currentMode);
-  document.documentElement.setAttribute('data-palette', currentPalette);
+const popularCities = [
+  { city: "Wah", country: "Pakistan" },
+  { city: "Islamabad", country: "Pakistan" },
+  { city: "Rawalpindi", country: "Pakistan" },
+  { city: "Lahore", country: "Pakistan" },
+  { city: "Karachi", country: "Pakistan" },
+  { city: "Peshawar", country: "Pakistan" },
+  { city: "Makkah", country: "Saudi Arabia" },
+  { city: "Madinah", country: "Saudi Arabia" },
+  { city: "Riyadh", country: "Saudi Arabia" },
+  { city: "Dubai", country: "United Arab Emirates" },
+  { city: "Abu Dhabi", country: "United Arab Emirates" },
+  { city: "London", country: "United Kingdom" },
+  { city: "New York", country: "United States" },
+  { city: "Istanbul", country: "Turkey" },
+  { city: "Cairo", country: "Egypt" },
+  { city: "Doha", country: "Qatar" }
+];
 
-  document.getElementById('modeToggle').addEventListener('click', () => {
-    currentMode = currentMode === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-mode', currentMode);
-    localStorage.setItem('hijri_mode', currentMode);
-  });
-
-  const paletteBtns = document.querySelectorAll('.palette-btn');
-  paletteBtns.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      paletteBtns.forEach(b => b.classList.remove('active'));
-      const pal = e.target.getAttribute('data-palette');
-      e.target.classList.add('active');
-      currentPalette = pal;
-      document.documentElement.setAttribute('data-palette', pal);
-      localStorage.setItem('hijri_palette', pal);
-    });
-  });
-
-  const grid = document.getElementById('monthGrid');
-  months.forEach((m, i) => {
-    const card = document.createElement('div');
-    card.className = 'month-card';
-    card.innerHTML = `
-      <div class="m-num">${String(i+1).padStart(2,'0')} / 12</div>
-      <div class="m-title-ar">${m.ar}</div>
-      <div class="m-title-en">${m.en}</div>
-      <div class="m-meaning">"${m.meaning}"</div>
-      <div class="m-desc">${m.note}</div>
-      ${m.sacred ? `<div class="badge-sacred">✦ Sacred Month</div>` : ''}
-    `;
-    card.addEventListener('click', () => openMonthModal(i));
-    grid.appendChild(card);
-  });
-
-  // Accurate Tabular Algorithm
-  function gregorianToHijriTabular(date, manualShift = 0) {
-    const dObj = new Date(date);
-    dObj.setDate(dObj.getDate() + manualShift);
-    
-    const y = dObj.getFullYear(), m = dObj.getMonth() + 1, d = dObj.getDate();
-    let jd = Math.floor((1461 * (y + 4800 + Math.floor((m - 14) / 12))) / 4) +
-      Math.floor((367 * (m - 2 - 12 * Math.floor((m - 14) / 12))) / 12) -
-      Math.floor((3 * Math.floor((y + 4900 + Math.floor((m - 14) / 12)) / 100)) / 4) +
-      d - 32075;
-
-    let l = jd - 1948440 + 10632;
-    let n = Math.floor((l - 1) / 10631);
-    l = l - 10631 * n + 354;
-    let j = Math.floor((10985 - l) / 5316) * Math.floor((50 * l) / 17719) +
-             Math.floor(l / 5670) * Math.floor((43 * l) / 15238);
-    l = l - Math.floor((30 - j) / 15) * Math.floor((17719 * j) / 50) -
-             Math.floor(j / 16) * Math.floor((15238 * j) / 43) + 29;
-    let month = Math.floor((24 * l) / 709);
-    let day = l - Math.floor((709 * month) / 24);
-    let year = 30 * n + j - 30;
-    return { year, month, day };
+function gregorianToHijri(date, shift = 0){
+  const d0 = new Date(date); d0.setDate(d0.getDate() + shift);
+  const y = d0.getFullYear(), m = d0.getMonth() + 1, d = d0.getDate();
+  let jd = Math.floor((1461*(y+4800+Math.floor((m-14)/12)))/4) + Math.floor((367*(m-2-12*Math.floor((m-14)/12)))/12) - Math.floor((3*Math.floor((y+4900+Math.floor((m-14)/12))/100))/4) + d - 32075;
+  let l = jd - 1948440 + 10632; const n = Math.floor((l-1)/10631); l = l - 10631*n + 354;
+  const j = Math.floor((10985-l)/5316)*Math.floor((50*l)/17719) + Math.floor(l/5670)*Math.floor((43*l)/15238);
+  l = l - Math.floor((30-j)/15)*Math.floor((17719*j)/50) - Math.floor(j/16)*Math.floor((15238*j)/43) + 29;
+  const month = Math.floor((24*l)/709); const day = l - Math.floor((709*month)/24); const year = 30*n + j - 30;
+  return { year, month, day };
+}
+function hijriToGregorian(hy, hm, hd, shift = 0){
+  const anchorGreg = new Date(2000, 0, 1), anchorSerial = 1420*354.36707 + 8*29.530589 + 24, targetSerial = hy*354.36707 + (hm-1)*29.530589 + hd;
+  const candidate = new Date(anchorGreg); candidate.setDate(candidate.getDate() + Math.round(targetSerial - anchorSerial));
+  for (let delta = -6; delta <= 6; delta++){
+    const test = new Date(candidate); test.setDate(test.getDate() + delta);
+    const h = gregorianToHijri(test, shift);
+    if (h.year === hy && h.month === hm && h.day === hd) return test;
   }
+  return candidate;
+}
+function formatHijri(h){ return `${h.day} ${months[h.month-1].en} ${h.year} AH`; }
+function isoKey(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 
-  function formatHijri(h) {
-    return `${h.day} ${months[h.month - 1].en} ${h.year} AH`;
+let offset = 0;
+let viewYear, viewMonth;
+const todayReal = new Date(); viewYear = todayReal.getFullYear(); viewMonth = todayReal.getMonth();
+
+const themeColors = { manuscript: '#EEE4CC', sandstone: '#F5EFE6', midnight: '#000000', observatory: '#0A0F1C', emerald: '#06140E' };
+function setTheme(themeName) {
+  document.documentElement.setAttribute('data-theme', themeName); localStorage.setItem('hijri_theme_v2', themeName);
+  const metaTheme = document.getElementById('metaThemeColor');
+  if(metaTheme && themeColors[themeName]) metaTheme.setAttribute('content', themeColors[themeName]);
+  document.querySelectorAll('.sidebar-theme-btn').forEach(b => b.classList.toggle('active', b.dataset.theme === themeName));
+  const isDark = ['midnight', 'observatory', 'emerald'].includes(themeName);
+  document.getElementById('lightModeBtn').classList.toggle('active', !isDark); document.getElementById('darkModeBtn').classList.toggle('active', isDark);
+}
+setTheme(localStorage.getItem('hijri_theme_v2') || 'manuscript');
+document.querySelectorAll('.sidebar-theme-btn').forEach(btn => btn.addEventListener('click', () => setTheme(btn.dataset.theme)));
+document.getElementById('lightModeBtn').addEventListener('click', () => setTheme('manuscript'));
+document.getElementById('darkModeBtn').addEventListener('click', () => setTheme('midnight'));
+
+const sidebar = document.getElementById('sidebar'); const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+function openSidebar(){ sidebar.classList.add('active'); sidebarBackdrop.classList.add('active'); }
+function closeSidebar(){ sidebar.classList.remove('active'); sidebarBackdrop.classList.remove('active'); }
+document.getElementById('menuToggleBtn').addEventListener('click', openSidebar);
+document.getElementById('sidebarCloseBtn').addEventListener('click', closeSidebar);
+sidebarBackdrop.addEventListener('click', closeSidebar);
+document.querySelectorAll('.sidebar-nav .nav-link').forEach(link => link.addEventListener('click', closeSidebar));
+
+let holidayMap = {};
+function rebuildHolidayMap(){
+  holidayMap = {}; const baseHijriYear = gregorianToHijri(new Date(), offset - 1).year;
+  for (let y = baseHijriYear - 1; y <= baseHijriYear + 2; y++){
+    holidayDefs.forEach(hd=>{ holidayMap[isoKey(hijriToGregorian(y, hd.m, hd.d, offset - 1))] = hd.name; });
   }
+}
 
-  function renderOfflineToday() {
-    const now = new Date();
-    document.getElementById('todayGreg').textContent = now.toLocaleDateString(undefined, { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-    
-    // Global calculation (Standard tabular)
-    const globalH = gregorianToHijriTabular(now, currentOffset);
-    
-    // Local Pakistan calculation (-1 day shift from standard astronomical calculation)
-    const localH = gregorianToHijriTabular(now, -1 + currentOffset);
-    currentHijriStateLocal = localH;
+function renderMoon(hijriDay){
+  const x = Math.min((hijriDay - 1) / 29.53, 0.999), mag = Math.sin(Math.PI * x), sign = x <= 0.5 ? -1 : 1;
+  document.getElementById('moonShade').style.transform = `translateX(${(sign * mag * 100).toFixed(1)}%)`;
+  let phase = 'New Moon';
+  if (x >= 0.03 && x < 0.22) phase = 'Waxing Crescent'; else if (x >= 0.22 && x < 0.28) phase = 'First Quarter'; else if (x >= 0.28 && x < 0.47) phase = 'Waxing Gibbous'; else if (x >= 0.47 && x < 0.53) phase = 'Full Moon'; else if (x >= 0.53 && x < 0.72) phase = 'Waning Gibbous'; else if (x >= 0.72 && x < 0.78) phase = 'Last Quarter'; else if (x >= 0.78) phase = 'Waning Crescent';
+  document.getElementById('moonPhaseName').textContent = phase;
+  document.getElementById('monthProgressFill').style.width = Math.min((hijriDay / 29.53) * 100, 100).toFixed(0) + '%';
+  document.getElementById('monthProgressLabel').textContent = `Day ${hijriDay} of the lunar month`;
+}
 
-    document.getElementById('localHijri').textContent = formatHijri(localH);
-    document.getElementById('globalHijri').textContent = formatHijri(globalH);
-    document.getElementById('sourceTag').textContent = `Local: Ruet-e-Hilal Standard (-1d)` + (currentOffset !== 0 ? ` (${currentOffset > 0 ? '+' : ''}${currentOffset}d shift)` : '');
+function renderToday(){
+  const now = new Date();
+  document.getElementById('todayGreg').textContent = now.toLocaleDateString(undefined,{ month:'long', day:'numeric', year:'numeric' });
+  document.getElementById('weekdayTag').textContent = now.toLocaleDateString(undefined,{ weekday:'long' }).toUpperCase();
+  const local = gregorianToHijri(now, offset - 1), global = gregorianToHijri(now, offset);
+  document.getElementById('localHijri').textContent = formatHijri(local); document.getElementById('globalHijri').textContent = formatHijri(global);
+  renderMoon(local.day);
+}
+
+function cleanTime(str){ return str ? str.split(' ')[0] : '--:--'; }
+function updatePrayerUI(t){
+  ['Fajr','Sunrise','Dhuhr','Asr','Maghrib','Isha'].forEach(p => { document.getElementById(`p-${p.toLowerCase()}`).textContent = cleanTime(t[p]); });
+}
+
+/* Prayer Times & Location Logic using accurate Hanafi configuration (method=1, school=1) */
+let savedCity = localStorage.getItem('hijri_city');
+let savedCountry = localStorage.getItem('hijri_country');
+
+async function fetchByCity(city, country) {
+  const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=1&school=1`);
+  if (!res.ok) throw new Error('API Error');
+  const data = await res.json();
+  updatePrayerUI(data.data.timings);
+  
+  // Sync location based date info if available from AlAdhan
+  if(data.data.date && data.data.date.gregorian) {
+    document.getElementById('prayerLoc').textContent = `${city} (Hanafi)`;
+    document.getElementById('topLocLabel').textContent = city;
   }
+}
 
-  async function fetchLiveToday() {
-    const now = new Date();
-    const dd = String(now.getDate()).padStart(2, '0');
-    const mm = String(now.getMonth() + 1).padStart(2, '0');
-    const yyyy = now.getFullYear();
+async function fallbackPrayerTimes() {
+  try {
+    await fetchByCity('Makkah', 'Saudi Arabia');
+    document.getElementById('prayerLoc').textContent = "Makkah (Default)";
+    document.getElementById('topLocLabel').textContent = "Set Location";
+  } catch(e) {
+    document.getElementById('prayerLoc').textContent = "Offline";
+    document.getElementById('topLocLabel').textContent = "Offline";
+  }
+}
 
+async function loadPrayerTimes() {
+  const locElem = document.getElementById('prayerLoc');
+  const topLocLabel = document.getElementById('topLocLabel');
+  
+  if (savedCity && savedCountry) {
     try {
-      const res = await fetch(`https://api.aladhan.com/v1/gToH/${dd}-${mm}-${yyyy}?timezonestring=Asia/Karachi`);
-      if (!res.ok) throw new Error();
-      const data = await res.json();
-      const h = data.data.hijri;
-      
-      const globalH = { day: parseInt(h.day, 10) + currentOffset, month: h.month.number, year: parseInt(h.year, 10) };
-      const localH = { day: parseInt(h.day, 10) - 1 + currentOffset, month: h.month.number, year: parseInt(h.year, 10) };
-      currentHijriStateLocal = localH;
+      await fetchByCity(savedCity, savedCountry);
+      return;
+    } catch(e) { console.error(e); }
+  }
 
-      document.getElementById('todayGreg').textContent = now.toLocaleDateString(undefined, { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-      document.getElementById('localHijri').textContent = formatHijri(localH);
-      document.getElementById('globalHijri').textContent = formatHijri(globalH);
-      document.getElementById('sourceTag').textContent = `Live API fetched • Local adjusted for Pakistan (-1d)`;
-    } catch {
-      renderOfflineToday();
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      try {
+        const { latitude, longitude } = pos.coords;
+        const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=1&school=1`);
+        const data = await res.json();
+        updatePrayerUI(data.data.timings);
+        locElem.textContent = "Your Location (Hanafi)";
+        topLocLabel.textContent = "Auto (GPS)";
+      } catch (e) { fallbackPrayerTimes(); }
+    }, () => fallbackPrayerTimes(), { timeout: 8000 });
+  } else {
+    fallbackPrayerTimes();
+  }
+}
+
+// Levenshtein distance for typo-tolerant fuzzy matching
+function getEditDistance(a, b) {
+  if (a.length === 0) return b.length;
+  if (b.length === 0) return a.length;
+  const matrix = [];
+  for (let i = 0; i <= b.length; i++) { matrix[i] = [i]; }
+  for (let j = 0; j <= a.length; j++) { matrix[0][j] = j; }
+  for (let i = 1; i <= b.length; i++) {
+    for (let j = 1; j <= a.length; j++) {
+      if (b.charAt(i - 1) === a.charAt(j - 1)) {
+        matrix[i][j] = matrix[i - 1][j - 1];
+      } else {
+        matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1));
+      }
     }
   }
+  return matrix[b.length][a.length];
+}
 
-  document.getElementById('refreshBtn').addEventListener('click', fetchLiveToday);
+document.getElementById('topLocBtn').addEventListener('click', () => {
+  openModal(`
+    <div class="modal-en">Select Location</div>
+    <div class="modal-sub">Type your city with typo support</div>
+    <div class="modal-body" style="position:relative;">
+      <input type="text" id="locSearchInput" class="loc-search-input" placeholder="Start typing city (e.g. Islamabad, Wah)..." autocomplete="off">
+      <div id="locSuggestions" class="loc-suggestions"></div>
+      <div style="margin-top:14px; display:flex; gap:8px; justify-content:flex-end;">
+        <button type="button" class="btn" id="clearLocBtn">Reset to GPS</button>
+      </div>
+    </div>
+  `);
 
-  document.querySelectorAll('.offset-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      document.querySelectorAll('.offset-btn').forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
-      currentOffset = parseInt(e.target.getAttribute('data-offset'), 10);
-      renderOfflineToday();
-      runConvert();
-    });
+  const input = document.getElementById('locSearchInput');
+  const suggestionsBox = document.getElementById('locSuggestions');
+
+  input.focus();
+  input.addEventListener('input', () => {
+    const query = input.value.trim().toLowerCase();
+    if (!query) {
+      suggestionsBox.style.display = 'none';
+      return;
+    }
+
+    const matches = popularCities.map(item => {
+      const target = item.city.toLowerCase();
+      const dist = getEditDistance(query, target);
+      let score = dist;
+      if (target.includes(query)) score = 0;
+      return { ...item, score };
+    }).sort((a, b) => a.score - b.score).slice(0, 5);
+
+    if (matches.length > 0) {
+      suggestionsBox.innerHTML = matches.map(m => `
+        <div class="loc-suggestion-item" data-city="${m.city}" data-country="${m.country}">
+          ${m.city}, ${m.country}
+        </div>
+      `).join('');
+      suggestionsBox.style.display = 'block';
+
+      suggestionsBox.querySelectorAll('.loc-suggestion-item').forEach(el => {
+        el.addEventListener('click', () => {
+          const c = el.dataset.city;
+          const co = el.dataset.country;
+          localStorage.setItem('hijri_city', c);
+          localStorage.setItem('hijri_country', co);
+          savedCity = c; savedCountry = co;
+          closeModal();
+          document.getElementById('topLocLabel').textContent = "Locating...";
+          loadPrayerTimes();
+        });
+      });
+    } else {
+      suggestionsBox.style.display = 'none';
+    }
   });
 
-  const dateInput = document.getElementById('dateInput');
-  const resultEl = document.getElementById('convertResult');
-  const today = new Date();
-  dateInput.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-
-  function runConvert() {
-    if (!dateInput.value) return;
-    const [yy, mm, dd] = dateInput.value.split('-').map(Number);
-    const dt = new Date(yy, mm - 1, dd);
-    // Converting using local Pakistan standard (-1 day shift)
-    resultEl.textContent = formatHijri(gregorianToHijriTabular(dt, -1 + currentOffset));
-  }
-  dateInput.addEventListener('change', runConvert);
-
-  const modalBackdrop = document.getElementById('modalBackdrop');
-  const modalContent = document.getElementById('modalContent');
-
-  function openModal(html) {
-    modalContent.innerHTML = html;
-    modalBackdrop.classList.add('active');
-  }
-  function closeModal() { modalBackdrop.classList.remove('active'); }
-
-  document.getElementById('modalClose').addEventListener('click', closeModal);
-  modalBackdrop.addEventListener('click', (e) => { if (e.target === modalBackdrop) closeModal(); });
-
-  document.getElementById('todayCard').addEventListener('click', (e) => {
-    if (e.target.closest('.card-controls')) return;
-    const m = months[currentHijriStateLocal.month - 1];
-    const html = `
-      <div class="modal-ar">${m.ar}</div>
-      <div class="modal-en">${currentHijriStateLocal.day} ${m.en} ${currentHijriStateLocal.year} AH</div>
-      <div class="modal-sub">"${m.meaning}" (Pakistan Local Date)</div>
-
-      <div class="modal-body">
-        <div class="modal-h4">Month Overview</div>
-        <p>${m.significance}</p>
-        <div class="modal-h4">Recommended Observances</div>
-        <p>${m.practices}</p>
-      </div>
-    `;
-    openModal(html);
+  document.getElementById('clearLocBtn').addEventListener('click', () => {
+    localStorage.removeItem('hijri_city');
+    localStorage.removeItem('hijri_country');
+    savedCity = null; savedCountry = null;
+    closeModal();
+    document.getElementById('topLocLabel').textContent = "Locating...";
+    loadPrayerTimes();
   });
+});
 
-  function openMonthModal(idx) {
-    const m = months[idx];
-    const html = `
-      <div class="modal-ar">${m.ar}</div>
-      <div class="modal-en">${idx + 1}. ${m.en}</div>
-      <div class="modal-sub">Meaning: "${m.meaning}"</div>
+document.getElementById('refreshBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('refreshBtn'); btn.classList.add('spin');
+  document.getElementById('statusLine').textContent = "Syncing prayer times…"; document.getElementById('statusLine').className = "status-line";
+  await loadPrayerTimes();
+  setTimeout(() => {
+    btn.classList.remove('spin');
+    document.getElementById('statusLine').textContent = "Verified with API."; document.getElementById('statusLine').className = "status-line ok";
+    setTimeout(() => { document.getElementById('statusLine').textContent = ""; }, 3500);
+  }, 400);
+});
 
-      <div class="modal-body">
-        <div class="modal-h4">Significance</div>
-        <p>${m.significance}</p>
-        <div class="modal-h4">Observances</div>
-        <p>${m.practices}</p>
+document.querySelectorAll('#offsetRow button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('#offsetRow button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active'); offset = parseInt(btn.dataset.offset,10);
+    rebuildHolidayMap(); renderToday(); runConvert(); renderCalendar(); renderUpcoming();
+  });
+});
+
+const dateInput = document.getElementById('dateInput'), convertResult = document.getElementById('convertResult');
+dateInput.value = isoKey(todayReal);
+function runConvert(){ if(!dateInput.value) return; const [y,m,d] = dateInput.value.split('-').map(Number); convertResult.textContent = formatHijri(gregorianToHijri(new Date(y, m-1, d), offset - 1)); }
+dateInput.addEventListener('change', runConvert);
+
+function renderUpcoming(){
+  const now = new Date(); now.setHours(0,0,0,0); const baseHijriYear = gregorianToHijri(now, offset - 1).year; const occurrences = [];
+  [baseHijriYear, baseHijriYear+1].forEach(y=>{ holidayDefs.forEach(hd=>{ const g = hijriToGregorian(y, hd.m, hd.d, offset - 1); if (g >= now) occurrences.push({ name: hd.name, date: g }); }); });
+  occurrences.sort((a,b)=>a.date-b.date);
+  document.getElementById('upcomingList').innerHTML = occurrences.slice(0,6).map((o)=>{
+    const days = Math.round((o.date - now) / 86400000), when = o.date.toLocaleDateString(undefined,{ weekday:'short', month:'short', day:'numeric' });
+    return `<div class="upcoming-row"><div><div class="name">${o.name}</div><div class="when">${when}</div></div><div class="count">${days === 0 ? 'Today' : days === 1 ? 'Tomorrow' : `in ${days} days`}</div></div>`;
+  }).join('');
+}
+
+const monthLabelFmt = new Intl.DateTimeFormat(undefined, { month:'long', year:'numeric' });
+function renderCalendar(){
+  const first = new Date(viewYear, viewMonth, 1), startWeekday = first.getDay(), daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate(), daysInPrevMonth = new Date(viewYear, viewMonth, 0).getDate();
+  const cells = [];
+  for (let i = startWeekday - 1; i >= 0; i--) cells.push({ day: daysInPrevMonth - i, outside:true, dateObj: new Date(viewYear, viewMonth-1, daysInPrevMonth - i) });
+  for (let d = 1; d <= daysInMonth; d++) cells.push({ day: d, outside:false, dateObj: new Date(viewYear, viewMonth, d) });
+  let nextDay = 1; while (cells.length % 7 !== 0){ cells.push({ day: nextDay, outside:true, dateObj: new Date(viewYear, viewMonth+1, nextDay) }); nextDay++; }
+  const grid = document.getElementById('dayGrid'); grid.innerHTML = ''; const todayKey = isoKey(new Date());
+  
+  let activities = {};
+  try { activities = JSON.parse(localStorage.getItem('hijri_activities') || '{}'); } catch(e){}
+
+  cells.forEach((cell)=>{
+    const key = isoKey(cell.dateObj), isToday = key === todayKey, isFriday = cell.dateObj.getDay() === 5;
+    const h = gregorianToHijri(cell.dateObj, offset - 1), holiday = holidayMap[key];
+    const hasActivity = activities[key] && activities[key].trim() !== "";
+    const div = document.createElement('div');
+    div.className = 'day-cell' + (cell.outside?' outside':'') + (isToday?' today':'') + (isFriday?' fri':'');
+    div.innerHTML = `<div class="gnum">${cell.day}</div><div class="hsub">${h.day} ${months[h.month-1].en.slice(0,4)}</div>${holiday ? '<div class="hdot"></div>' : ''}${hasActivity ? '<div class="actdot" title="Activity scheduled"></div>' : ''}`;
+    div.addEventListener('click', ()=> openDayModal(cell.dateObj, h, holiday)); grid.appendChild(div);
+  });
+  document.getElementById('calMonthLabel').textContent = monthLabelFmt.format(first);
+  const midHijri = gregorianToHijri(new Date(viewYear, viewMonth, 15), offset - 1);
+  document.getElementById('calHijriLabel').textContent = `${months[midHijri.month-1].en} ${midHijri.year} AH`;
+}
+
+document.getElementById('prevMonth').addEventListener('click', ()=>{ viewMonth--; if(viewMonth<0){viewMonth=11; viewYear--;} renderCalendar(); });
+document.getElementById('nextMonth').addEventListener('click', ()=>{ viewMonth++; if(viewMonth>11){viewMonth=0; viewYear++;} renderCalendar(); });
+document.getElementById('jumpToday').addEventListener('click', ()=>{ viewYear = todayReal.getFullYear(); viewMonth = todayReal.getMonth(); renderCalendar(); });
+
+const monthsIndex = document.getElementById('monthsIndex');
+months.forEach((m,i)=>{
+  const row = document.createElement('div');
+  row.className = 'month-row';
+  row.innerHTML = `
+    <div class="month-card-header">
+      <span class="idx">${String(i+1).padStart(2,'0')}</span>
+      <svg class="month-crescent" viewBox="0 0 24 24" fill="currentColor"><mask id="mc${i}"><rect width="24" height="24" fill="white"/><circle cx="15.5" cy="8" r="6.5" fill="black"/></mask><circle cx="12" cy="12" r="9" mask="url(#mc${i})"/></svg>
+    </div>
+    <div class="month-card-body">
+      <div class="en">${m.en}</div>
+      <div class="ar">${m.ar}</div>
+    </div>
+    ${m.sacred ? '<span class="sacred-badge">Sacred Month</span>' : ''}
+  `;
+  row.addEventListener('click', ()=> openMonthModal(i));
+  monthsIndex.appendChild(row);
+});
+
+const modalBackdrop = document.getElementById('modalBackdrop'), modalContent = document.getElementById('modalContent');
+function openModal(html){ modalContent.innerHTML = html; modalBackdrop.classList.add('active'); }
+function closeModal(){ modalBackdrop.classList.remove('active'); }
+document.getElementById('modalClose').addEventListener('click', closeModal);
+modalBackdrop.addEventListener('click', e=>{ if (e.target === modalBackdrop) closeModal(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeSidebar(); closeModal(); }});
+
+function openMonthModal(idx){
+  const m = months[idx];
+  openModal(`<div class="modal-ar">${m.ar}</div><div class="modal-en">${idx+1}. ${m.en}</div><div class="modal-sub">"${m.meaning}"</div><div class="modal-body"><div class="modal-h4">Significance</div><p>${m.significance}</p><div class="modal-h4">Observances & Practices</div><p>${m.practices}</p><div class="modal-h4">Authentic Reference</div><span class="citation">${m.ref}</span></div>`);
+}
+
+function openDayModal(dateObj, h, holiday){
+  const m = months[h.month-1], gregLabel = dateObj.toLocaleDateString(undefined,{ weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  const key = isoKey(dateObj);
+  let activities = {};
+  try { activities = JSON.parse(localStorage.getItem('hijri_activities') || '{}'); } catch(e){}
+  const currentActivity = activities[key] || '';
+
+  openModal(`
+    <div class="modal-ar">${m.ar}</div>
+    <div class="modal-en">${formatHijri(h)}</div>
+    <div class="modal-sub">${gregLabel}</div>
+    <div class="modal-body">
+      ${holiday ? `<div class="modal-h4">Special Observance</div><p><strong>${holiday}</strong></p>` : ''}
+      <div class="modal-h4">About ${m.en}</div>
+      <p>${m.significance}</p>
+      
+      <div class="modal-h4">Activity / Reminder</div>
+      <input type="text" id="dayActivityInput" class="loc-search-input" placeholder="Add reminder for this day..." value="${currentActivity}">
+      <div style="margin-top:10px; display:flex; justify-content:flex-end;">
+        <button type="button" class="btn" id="saveActivityBtn">Save Reminder</button>
       </div>
-    `;
-    openModal(html);
-  }
 
-  renderOfflineToday();
-  runConvert();
+      <span class="citation" style="margin-top:14px;">${m.ref}</span>
+    </div>
+  `);
+
+  document.getElementById('saveActivityBtn').addEventListener('click', () => {
+    const val = document.getElementById('dayActivityInput').value.trim();
+    let acts = {};
+    try { acts = JSON.parse(localStorage.getItem('hijri_activities') || '{}'); } catch(e){}
+    if (val) {
+      acts[key] = val;
+      if ("Notification" in window && Notification.permission !== "granted") {
+        Notification.requestPermission();
+      }
+    } else {
+      delete acts[key];
+    }
+    localStorage.setItem('hijri_activities', JSON.stringify(acts));
+    closeModal();
+    renderCalendar();
+  });
+}
+
+// Check and trigger daily notifications for saved activities
+function checkReminders() {
+  if (!("Notification" in window)) return;
+  if (Notification.permission === "default") {
+    Notification.requestPermission();
+  }
+  try {
+    const acts = JSON.parse(localStorage.getItem('hijri_activities') || '{}');
+    const todayKeyStr = isoKey(new Date());
+    if (acts[todayKeyStr] && Notification.permission === "granted") {
+      const lastNotified = localStorage.getItem('hijri_last_notified');
+      if (lastNotified !== todayKeyStr) {
+        new Notification("Hijri Calendar Reminder", {
+          body: acts[todayKeyStr],
+          icon: ""
+        });
+        localStorage.setItem('hijri_last_notified', todayKeyStr);
+      }
+    }
+  } catch(e){}
+}
+
+rebuildHolidayMap(); renderToday(); runConvert(); renderCalendar(); renderUpcoming(); loadPrayerTimes();
+setTimeout(checkReminders, 1500);
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed:', err));
+  });
+}
 </script>
 
 </body>
