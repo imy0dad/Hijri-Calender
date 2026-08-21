@@ -1,19 +1,36 @@
 {
+  "id": "/",
   "name": "The Hijri Calendar",
   "short_name": "Hijri Calendar",
-  "description": "A self-contained Hijri calendar with local sightings and prayer times.",
+  "description": "An offline-first Hijri/Gregorian calendar with prayer times, moon phases, and Islamic observance dates.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
+  "display_override": ["standalone", "browser"],
+  "orientation": "portrait",
   "background_color": "#EEE4CC",
   "theme_color": "#EEE4CC",
-  "orientation": "any",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["lifestyle", "utilities", "personalization"],
   "icons": [
     {
-      "src": "./1000086014.png",
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
