@@ -3,6 +3,6 @@
       "target": {
         "namespace": "android_app",
         "package_name": "io.github.imy0dad.twa",
-        "sha256_cert_fingerprints": ["C6:E7:28:C2:DF:02:BA:E4:BF:8C:69:CB:7D:4A:8A:85:13:55:83:AE:B6:5B:98:4A:AD:F8:9A:4B:D4:7D:FE:2E"]
+        "sha256_cert_fingerprints": ["D1:BD:E7:5F:5B:02:F7:D8:96:F7:E6:37:3E:12:A7:96:5F:42:58:B5:3A:EF:33:53:F0:25:55:1D:60:F6:ED:C8"]
       }
     }]
