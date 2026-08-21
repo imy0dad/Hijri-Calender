@@ -1,26 +1,19 @@
 {
-  "background_color": "#f4efe6",
-  "dir": "ltr",
+  "name": "The Hijri Calendar",
+  "short_name": "Hijri Calendar",
+  "description": "A self-contained Hijri calendar with local sightings and prayer times.",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "name": "Hijri Calender",
+  "background_color": "#EEE4CC",
+  "theme_color": "#EEE4CC",
   "orientation": "any",
-  "scope": "/",
-  "short_name": "Hijri Cal",
-  "start_url": "/",
-  "theme_color": "#5c4033",
   "icons": [
     {
-      "src": "data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;rect width='100' height='100' rx='20' fill='%23151310'/&gt;&lt;mask id='cm'&gt;&lt;rect width='100' height='100' fill='white'/&gt;&lt;circle cx='62' cy='34' r='26' fill='black'/&gt;&lt;/mask&gt;&lt;circle cx='48' cy='46' r='30' fill='%23C9A227' mask='url(%23cm)'/&gt;&lt;/svg&gt;",
-      "type": "image/svg+xml",
-      "isSquare": false,
-      "isPng": false,
-      "isWebp": false,
-      "isJpg": false,
-      "width": 0,
-      "is512x512": false,
-      "is256x256": false,
-      "is192x192": false
+      "src": "./1000086014.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
-  ],
-  "description": "Easy lightweight convenient calendar."
+  ]
 }
