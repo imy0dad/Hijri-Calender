@@ -32,5 +32,21 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "screenshots": [
+    {
+      "src": "./screenshot-today.png",
+      "sizes": "1080x2268",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Today view with Hijri date, moon phase, and prayer times"
+    },
+    {
+      "src": "./screenshot-months.png",
+      "sizes": "1080x2270",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "The Twelve Islamic Months with Arabic names"
+    }
   ]
 }
