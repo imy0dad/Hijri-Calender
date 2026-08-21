@@ -65,6 +65,10 @@
 
 *,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
 
+html, body {
+  overscroll-behavior-y: contain;
+}
+
 html{ background:var(--paper); scroll-behavior:smooth; }
 body{
   background-color:var(--paper);
@@ -73,7 +77,7 @@ body{
   font-family:var(--font-sans); line-height:1.5;
   min-height:100vh; min-height:100dvh;
   padding-bottom:max(70px, calc(50px + env(safe-area-inset-bottom)));
-  transition:background-color .35s ease, color .35s ease; overscroll-behavior-y:none;
+  transition:background-color .35s ease, color .35s ease;
 }
 body::before{
   content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
@@ -86,6 +90,34 @@ body::after{
 }
 a{ color:inherit; }
 button, input, select, .day-cell, .month-row, .nav-link { touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+
+/* ---------- Launch Splash Screen ---------- */
+.splash-screen {
+  position: fixed; inset: 0; z-index: 99999;
+  background: var(--paper);
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+  will-change: opacity, visibility;
+}
+.splash-screen.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.splash-content {
+  text-align: center;
+  animation: floatY 3s ease-in-out infinite, fadeUp 0.5s ease both;
+}
+.splash-crescent {
+  width: 50px; height: 50px; margin: 0 auto 12px; color: var(--accent);
+  filter: drop-shadow(0 4px 8px rgba(var(--shadow-tint),0.25));
+}
+.splash-title {
+  font-family: var(--font-serif); font-weight: 700; font-size: 26px; color: var(--ink);
+}
+.splash-subtitle {
+  font-family: var(--font-serif); font-size: 16px; color: var(--accent); margin-top: 4px; direction: rtl;
+}
 
 /* ---------- Section Header Lines ---------- */
 .section-header-title {
@@ -352,6 +384,18 @@ footer{ max-width:600px; margin:40px auto 0; padding:0 20px 40px; text-align:cen
 </head>
 <body>
 
+<!-- Launch Splash Screen Overlay -->
+<div class="splash-screen" id="splashScreen">
+  <div class="splash-content">
+    <svg class="splash-crescent" viewBox="0 0 24 24" fill="currentColor">
+      <mask id="spm"><rect width="24" height="24" fill="white"/><circle cx="15.5" cy="8" r="6.5" fill="black"/></mask>
+      <circle cx="12" cy="12" r="9" mask="url(#spm)"/>
+    </svg>
+    <div class="splash-title">The Hijri Calendar</div>
+    <div class="splash-subtitle">التقويم الهجري</div>
+  </div>
+</div>
+
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-header">
@@ -484,6 +528,17 @@ footer{ max-width:600px; margin:40px auto 0; padding:0 20px 40px; text-align:cen
 </footer>
 
 <script>
+// Hide splash screen smoothly on load
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const splash = document.getElementById('splashScreen');
+    if (splash) {
+      splash.classList.add('fade-out');
+      setTimeout(() => splash.remove(), 400);
+    }
+  }, 700); // 700ms splash duration
+});
+
 const months = [
   { ar:"مُحَرَّم", en:"Muharram", meaning:"forbidden / sacred", sacred:true, significance:"The first month of the Islamic calendar and one of the four sacred months ordained by Allah.", practices:"Fasting on the 9th and 10th days (Ashura) expiates the sins of the preceding year.", ref:"'The best fast after Ramadan is Allah's month of Muharram.' — Sahih Muslim 1163. Surah At-Tawbah 9:36." },
   { ar:"صَفَر", en:"Safar", meaning:"empty / void", sacred:false, significance:"Historically named for empty homes as journeys resumed. In Islam, Safar holds no bad omens or ill fortune.", practices:"Regular daily worship; rejecting pre-Islamic superstitions regarding this month.", ref:"'There is no infection and no bad omen in Safar.' — Sahih al-Bukhari 5707." },
